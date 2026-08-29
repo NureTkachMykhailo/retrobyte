@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Категорії статей{% endblock %}
+{% block content %}
+  <h1 class="page-title">Категорії<span class="accent">статей</span></h1>
+  <p class="subtitle">Оберіть тему, яка вас цікавить</p>
+
+  <div class="card-grid">
+    {% for category in categories %}
+      {% cycle 'yellow' 'teal' 'red' as color silent %}
+      <div class="card {{ color }}">
+        <h2>{{ category.name }}</h2>
+        <div class="desc">{{ category.description }}</div>
+        <hr>
+        <div class="card-footer">
+          <span>{{ category.article_count }} статей</span>
+          <a class="btn" href="{% url 'article_list' %}?category={{ category.id }}">Читати →</a>
+        </div>
+      </div>
+    {% empty %}
+      <p>Категорій ще немає.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

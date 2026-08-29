@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Мої статті{% endblock %}
+{% block content %}
+  <h1 class="page-title">Мої<span class="accent">статті</span></h1>
+  {% for article in articles %}
+    <div class="article-card">
+      <span class="tag">{{ article.category.name }}</span>
+      <h3><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></h3>
+      <div class="meta">{{ article.published_date|date:"d.m.Y" }}</div>
+    </div>
+  {% empty %}
+    <p>Ви ще не публікували статей.</p>
+  {% endfor %}
+{% endblock %}

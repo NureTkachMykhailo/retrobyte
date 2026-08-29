@@ -1,0 +1,29 @@
+{% load static %}
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}RetroByte{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'blog/style.css' %}">
+</head>
+<body>
+  <div class="topbar">
+    <a class="brand" href="{% url 'category_list' %}">RetroByte</a>
+    <div class="nav-links">
+      <a href="{% url 'category_list' %}">Категорії</a>
+      <a href="{% url 'article_list' %}">Всі статті</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'my_articles' %}">Мої статті</a>
+        <a href="{% url 'article_create' %}">Нова стаття</a>
+        <a href="{% url 'logout' %}">Вихід ({{ user.username }})</a>
+      {% else %}
+        <a href="{% url 'login' %}">Вхід</a>
+        <a href="{% url 'register' %}">Реєстрація</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

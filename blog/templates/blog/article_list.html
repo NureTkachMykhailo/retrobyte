@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Всі статті{% endblock %}
+{% block content %}
+  <h1 class="page-title">Каталог<span class="accent">статей</span></h1>
+
+  <form class="toolbar" method="get">
+    <input type="text" name="q" placeholder="Пошук за заголовком або текстом" value="{{ query }}">
+    <select name="category">
+      <option value="">Усі категорії</option>
+      {% for c in categories %}
+        <option value="{{ c.id }}" {% if selected_category|slugify == c.id|slugify %}selected{% endif %}>{{ c.name }}</option>
+      {% endfor %}
+    </select>
+    <select name="sort">
+      <option value="-published_date" {% if sort_by == "-published_date" %}selected{% endif %}>Спочатку нові</option>
+      <option value="published_date" {% if sort_by == "published_date" %}selected{% endif %}>Спочатку старі</option>
+      <option value="-comment_count" {% if sort_by == "-comment_count" %}selected{% endif %}>Найбільше коментарів</option>
+      <option value="comment_count" {% if sort_by == "comment_count" %}selected{% endif %}>Найменше коментарів</option>
+    </select>
+    <button class="btn" type="submit">Застосувати</button>
+  </form>
+
+  {% for article in page_obj %}
+    <div class="article-card">
+      <span class="tag">{{ article.category.name }}</span>
+      <h3><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></h3>
+      <p>{{ article.text|truncatewords:24 }}</p>
+      <div class="meta">{{ article.author.username }} · {{ article.published_date|date:"d.m.Y" }} · {{ article.comment_count }} коментарів</div>
+    </div>
+  {% empty %}
+    <p>Нічого не знайдено.</p>
+  {% endfor %}
+
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}&q={{ query }}&category={{ selected_category }}&sort={{ sort_by }}">&laquo;</a>
+    {% endif %}
+    <span class="current">{{ page_obj.number }} з {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}&q={{ query }}&category={{ selected_category }}&sort={{ sort_by }}">&raquo;</a>
+    {% endif %}
+  </div>
+{% endblock %}
